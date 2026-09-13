@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧹 오늘 우리 반 청소당번은?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', '맑은 고딕', sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+
+        .result-box {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            min-height: 70px;
+            align-items: center;
+        }
+
+        .number-card {
+            width: 60px;
+            height: 60px;
+            background-color: #4A90E2;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+            animation: popIn 0.5s ease-out;
+        }
+
+        .empty-msg {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+
+        button:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🧹 청소당번 추첨기</h1>
+        <p>1번부터 30번 중 랜덤으로 5명을 뽑습니다.</p>
+        
+        <div class="result-box" id="resultBox">
+            <span class="empty-msg">버튼을 눌러 당번을 뽑아주세요!</span>
+        </div>
+
+        <button onclick="pickCleaners()">추첨하기</button>
+    </div>
+
+    <script>
+        function pickCleaners() {
+            const resultBox = document.getElementById('resultBox');
+            
+            // 1부터 30까지의 번호 배열 생성
+            const totalStudents = 30;
+            const pickCount = 5;
+            const numbers = Array.from({ length: totalStudents }, (_, i) => i + 1);
+            
+            // 배열 셔플 (무작위 섞기 - 피셔-예이츠 셔플 알고리즘)
+            for (let i = numbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            }
+            
+            // 앞에서부터 5명 추출 후 보기 좋게 오름차순 정렬
+            const selected = numbers.slice(0, pickCount).sort((a, b) => a - b);
+            
+            // 결과 영역 초기화
+            resultBox.innerHTML = '';
+            
+            // 결과를 하나씩 화면에 생성 (애니메이션 효과)
+            selected.forEach((num, index) => {
+                setTimeout(() => {
+                    const card = document.createElement('div');
+                    card.className = 'number-card';
+                    card.textContent = `${num}번`;
+                    resultBox.appendChild(card);
+                }, index * 100); // 0.1초 간격으로 하나씩 등장
+            });
+        }
+    </script>
+
+</body>
+</html>
